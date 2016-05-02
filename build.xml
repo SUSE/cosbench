@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cosbench" default="compile-all" basedir="." xmlns:contrib="antlib:net.sf.antcontrib">
+
+  <property name="dev.dir" location="dev" />
+  <property name="src.dir" value="src" />
+  <property name="build.dir" value="bin" />
+  <property name="deploy.dir" location="dist/osgi/plugins" />
+  <property name="package.dir" location="package" />
+
+  <loadfile property="version" srcfile="VERSION"/>
+
+  <taskdef uri="antlib:net.sf.antcontrib"
+           resource="net/sf/antcontrib/antcontrib.properties"
+           classpath="ant-contrib-1.0b3.jar" />
+<!--
+  The order in the following list respects the projects' dependencies
+-->
+  <property name="proj.list" value="
+cosbench-log;
+cosbench-log4j;
+cosbench-http;
+cosbench-core-web;
+cosbench-config;
+cosbench-castor;
+cosbench-api;
+cosbench-ampli;
+cosbench-cdmi-util;
+cosbench-cdmi-base;
+cosbench-core;
+cosbench-driver-web;
+cosbench-httpauth;
+cosbench-swift;
+cosbench-cdmi-swift;
+cosbench-controller;
+cosbench-keystone;
+cosbench-scality;
+cosbench-controller-web;
+cosbench-driver;
+cosbench-mock;
+cosbench-swauth;
+cosbench-tomcat;
+cosbench-librados;
+cosbench-gcs;
+cosbench-s3
+" />
+
+  <target name="clean-jars">
+    <delete>
+      <fileset dir="${deploy.dir}" includes="cosbench-*.jar" />
+    </delete>
+  </target>
+
+  <target name="clean">
+    <delete dir="${dev.dir}/${proj.name}/${build.dir}" excludes="**/*.xml"/>
+  </target>
+
+  <target name="init" depends="clean">
+    <tstamp />
+    <mkdir dir="${dev.dir}/${proj.name}/${build.dir}" />
+  </target>
+
+  <target name="compile" depends="init">
+    <contrib:if>
+      <or>
+        <equals arg1="${proj.name}" arg2="cosbench-log4j" />
+        <equals arg1="${proj.name}" arg2="cosbench-castor" />
+      </or>
+      <then>
+      </then>
+      <else>
+        <javac srcdir="${dev.dir}/${proj.name}/${src.dir}"
+               destdir="${dev.dir}/${proj.name}/${build.dir}">
+          <classpath>
+            <fileset dir="dist/" includes="**/*.jar" />
+            <fileset dir="${dev.dir}/${proj.name}/" includes="**/*.jar" />
+          </classpath>
+        </javac>
+      </else>
+    </contrib:if>
+  </target>
+
+  <target name="copy-dir">
+    <copy todir="${dev.dir}/${proj.name}/${build.dir}">
+      <fileset dir="${dev.dir}/${proj.name}/${dir}" includes="**/*"/>
+    </copy>
+  </target>
+
+  <target name="jar" depends="compile">
+    <property file="${dev.dir}/${proj.name}/build.properties" />
+    <copy todir="${dev.dir}/${proj.name}/${build.dir}">
+      <fileset dir="${dev.dir}/${proj.name}/" includes="${bin.includes}"
+               excludes="."/>
+    </copy>
+    <jar jarfile="${deploy.dir}/${proj.name}_${version}.jar"
+      basedir="${dev.dir}/${proj.name}/${build.dir}"
+      manifest="${dev.dir}/${proj.name}/META-INF/MANIFEST.MF">
+    </jar>
+  </target>
+
+  <target name="compile-all" depends="clean-jars">
+    <contrib:foreach list="${proj.list}"
+             target="jar"
+             param="proj.name"
+             inheritall="true"
+             trim="true"
+             delimiter=";">
+    </contrib:foreach>
+  </target>
+
+  <target name="clean-all" depends="clean-jars">
+    <contrib:foreach list="${proj.list}"
+             target="clean"
+             param="proj.name"
+             inheritall="true"
+             trim="true"
+             delimiter=";">
+    </contrib:foreach>
+    <delete dir="${package.dir}" />
+  </target>
+
+  <target name="pack" depends="compile-all">
+    <tstamp />
+    <mkdir dir="${package.dir}" />
+    <copy todir="${package.dir}">
+      <fileset dir="release" />
+    </copy>
+    <copy todir="${package.dir}">
+      <fileset dir="dist" />
+    </copy>
+    <copy todir="${package.dir}">
+      <fileset dir="${basedir}" includes="LICENSE,NOTICE,VERSION,CHANGELOG,COSBenchUserGuide.pdf,COSBenchAdaptorDevGuide.pdf,3rd-party-licenses.pdf" />
+    </copy>
+  </target>
+
+</project>
+
