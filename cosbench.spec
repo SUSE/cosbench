@@ -21,13 +21,14 @@ Version:      0.4.1
 Release:      1
 License:      Apache-2.0
 Group:        Productivity/Networking/Email/Clients
-URL:          http://www.columbamail.org
+URL:          https://github.com/intel-cloud/cosbench
 Source:       cosbench-%{version}.tar.xz
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
-BuildRequires:update-alternatives java-1_6_0-openjdk-devel
+BuildRequires:update-alternatives
+BuildRequires:java-devel >= 1.6.0
 BuildRequires:ant
 Requires:     java >= 1.6.0
-BuildArchitectures:    noarch
+BuildArch:    noarch
 
 %description
 COSBench is a benchmarking tool to measure the performance of Cloud Object
