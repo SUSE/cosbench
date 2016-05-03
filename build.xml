@@ -127,13 +127,27 @@ cosbench-s3
     <tstamp />
     <mkdir dir="${package.dir}" />
     <copy todir="${package.dir}">
-      <fileset dir="release" />
+      <fileset dir="release">
+        <exclude name="javadoc/**" />
+        <exclude name="*.bat" />
+        <exclude name="lib-src/**" />
+        <exclude name="workspace/**" />
+        <exclude name="workloads/**" />
+        <exclude name="licenses/**" />
+        <exclude name="scripts/**" />
+      </fileset>
     </copy>
     <copy todir="${package.dir}">
       <fileset dir="dist" />
     </copy>
     <copy todir="${package.dir}">
-      <fileset dir="${basedir}" includes="LICENSE,NOTICE,VERSION,CHANGELOG,COSBenchUserGuide.pdf,COSBenchAdaptorDevGuide.pdf,3rd-party-licenses.pdf" />
+      <fileset dir="${basedir}">
+        <include name="LICENSE" />
+        <include name="NOTICE" />
+        <include name="VERSION" />
+        <include name="CHANGELOG" />
+        <include name="COSBenchUserGuide.pdf" />
+      </fileset>
     </copy>
   </target>
 
