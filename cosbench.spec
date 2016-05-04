@@ -43,17 +43,20 @@ COSBench now supports OpenStack* Swift, Amazon* S3, Amplidata v2.3, 2.5 and
 %setup -qn cosbench-%{version}
 
 %build
-%ant pack
+%ant install -Dinst.bin.dir="%buildroot/%_bindir" \
+    -Dinst.lib.dir="%buildroot/%_libdir/%name" \
+    -Dinst.conf.dir="%buildroot/%_sysconfigdir/%name" \
+    -Dinst.run.dir="\$HOME/.%name"
 
-%install
-install -dm 0755 "%buildroot/%_datadir/%name"
-install -m 0644 package/start-all.sh "%buildroot/%_datadir/%name/start-all.sh"
+#%install
+#install -dm 0755 "%buildroot/%_datadir/%name"
+#install -m 0644 package/start-all.sh "%buildroot/%_datadir/%name/start-all.sh"
 
 %files
 %defattr(-,root,root)
 %doc AUTHORS CHANGELOG LICENSE NOTICE README.md
-%_datadir/%name
-%_datadir/%name/start-all.sh
+#%_datadir/%name
+#%_datadir/%name/start-all.sh
 
 %changelog
 
