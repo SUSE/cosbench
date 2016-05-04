@@ -19,17 +19,23 @@
 # COSBENCH STARTUP SCRIPT
 #-------------------------------
 
+CONF_DIR=./conf
+RUN_DIR=./run
+LIB_DIR=.
+
+LOG_DIR=$RUN_DIR/log
+
 SERVICE_NAME=$1
 
-BOOT_LOG=log/$SERVICE_NAME-boot.log
+BOOT_LOG=$LOG_DIR/${SERVICE_NAME}_boot.log
 
 OSGI_BUNDLES="$2"
 
 OSGI_CONSOLE_PORT=$3
 
-OSGI_CONFIG=conf/.$SERVICE_NAME
+OSGI_CONFIG=$CONF_DIR/.$SERVICE_NAME
 
-TOMCAT_CONFIG=conf/$SERVICE_NAME-tomcat-server.xml
+TOMCAT_CONFIG=$CONF_DIR/$SERVICE_NAME-tomcat-server.xml
 
 TOOL="nc"
 TOOL_PARAMS="-i 0"
@@ -38,12 +44,23 @@ TOOL_PARAMS="-i 0"
 # MAIN
 #-------------------------------
 
+mkdir -p $RUN_DIR
+cp -r $OSGI_CONFIG $RUN_DIR/
+OSGI_CONFIG=$RUN_DIR/.$SERVICE_NAME
+
 rm -f $BOOT_LOG
-mkdir -p log
+mkdir -p $LOG_DIR
 
 echo "Launching osgi framwork ... "
 
-/usr/bin/nohup java -Dcosbench.tomcat.config=$TOMCAT_CONFIG -server -cp main/* org.eclipse.equinox.launcher.Main -configuration $OSGI_CONFIG -console $OSGI_CONSOLE_PORT 1> $BOOT_LOG 2>&1 &
+/usr/bin/nohup java -Dosgi.logfile="$LOG_DIR/${SERVICE_NAME}_osgi.log" \
+  -DCOSBENCH_LOG_DIR="$LOG_DIR" -DCOSBENCH_CONF_DIR="$CONF_DIR" \
+  -Dcosbench.$SERVICE_NAME.config="$CONF_DIR/$SERVICE_NAME.conf" \
+  -DCOSBENCH_RUN_DIR="$RUN_DIR" -Dcosbench.tomcat.config=$TOMCAT_CONFIG \
+  -Dcosbench.web.cosbenchUsers="$CONF_DIR/cosbench-users.xml" \
+  -Dosgi.framework=$LIB_DIR/osgi/org.eclipse.osgi_3.9.0.v20130529-1710.jar \
+  -server -cp $LIB_DIR/main/* org.eclipse.equinox.launcher.Main -configuration $OSGI_CONFIG \
+  -console $OSGI_CONSOLE_PORT 1> $BOOT_LOG 2>&1 &
 
 if [ $? -ne 0 ];
 then

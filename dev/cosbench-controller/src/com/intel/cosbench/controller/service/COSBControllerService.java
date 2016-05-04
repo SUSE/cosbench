@@ -53,8 +53,8 @@ class COSBControllerService implements ControllerService, WorkloadListener {
     private ControllerContext context;
     private Map<String, WorkloadProcessor> processors;
 	private OrderThreadPoolExecutor executor;
-    private WorkloadArchiver archiver = new SimpleWorkloadArchiver();
-    private WorkloadLoader loader = new SimpleWorkloadLoader();
+    private WorkloadArchiver archiver;
+    private WorkloadLoader loader;
     private WorkloadRepository memRepo = new RAMWorkloadRepository();
     
     private boolean loadArch = false;
@@ -81,7 +81,7 @@ class COSBControllerService implements ControllerService, WorkloadListener {
 		// initialize workload archiver and loader
 		String archive_dir = context.getArchive_dir();
 		archiver = new SimpleWorkloadArchiver(archive_dir);
-	    loader = new SimpleWorkloadLoader(archive_dir);
+	        loader = new SimpleWorkloadLoader(archive_dir);
 				
         count = new AtomicInteger(archiver.getTotalWorkloads());
         order = new AtomicInteger(0);

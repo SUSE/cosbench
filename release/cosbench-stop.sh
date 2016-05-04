@@ -44,7 +44,7 @@ else
 fi
 
 sleep 3
-	
+
 ps aux | grep eclipse | grep java | grep $OSGI_CONSOLE_PORT >> /dev/null
 if [ $? -eq 0 ]; then
 	echo "Can't stop cosbench $SERVICE_NAME, please inspect the system to fix it!"

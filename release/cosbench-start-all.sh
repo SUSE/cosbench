@@ -15,8 +15,13 @@
 #limitations under the License.
 #
 
-sh stop-controller.sh
+BIN_DIR=
+if [ -f ./cosbench-start-driver.sh ]; then
+  BIN_DIR=./
+fi
+
+${BIN_DIR}cosbench-start-driver.sh
 echo
 echo "======================================================"
 echo
-sh stop-driver.sh
+${BIN_DIR}cosbench-start-controller.sh

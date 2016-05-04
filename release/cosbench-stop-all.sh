@@ -15,12 +15,13 @@
 #limitations under the License.
 #
 
-#-------------------------------
-# COSBENCH DRIVER STOPPER
-#-------------------------------
+BIN_DIR=
+if [ -f ./cosbench-stop-driver.sh ]; then
+  BIN_DIR=./
+fi
 
-SERVICE_NAME=driver
-
-OSGI_CONSOLE_PORT=18089
-
-sh cosbench-stop.sh $SERVICE_NAME $OSGI_CONSOLE_PORT
+${BIN_DIR}cosbench-stop-controller.sh
+echo
+echo "======================================================"
+echo
+${BIN_DIR}cosbench-stop-driver.sh

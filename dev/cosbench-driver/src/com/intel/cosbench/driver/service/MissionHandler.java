@@ -48,7 +48,9 @@ class MissionHandler {
 
     private static final Logger LOGGER = LogFactory.getSystemLogger();
 
-    private static final File LOG_DIR = new File(new File("log"), "mission");
+    private static final String LOG_BASE_DIR =
+                                System.getProperty("COSBENCH_LOG_DIR", "log");
+    private static final File LOG_DIR = new File(new File(LOG_BASE_DIR), "mission");
 
     static {
         if (!LOG_DIR.exists())

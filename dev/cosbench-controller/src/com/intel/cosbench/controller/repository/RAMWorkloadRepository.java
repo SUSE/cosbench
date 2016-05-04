@@ -42,14 +42,18 @@ public class RAMWorkloadRepository implements WorkloadRepository,
 
     private static final Logger LOGGER = LogFactory.getSystemLogger();
 
+    private static final String LOG_BASE_DIR =
+                                System.getProperty("COSBENCH_LOG_DIR", "log");
+
     private File stops; /* a file holding started workloads */
     private File starts; /* a file holding stopped workloads */
 
     private WorkloadList workloads;
 
     public RAMWorkloadRepository() {
-        stops = new File("stop");
-        starts = new File("start");
+        File log_dir = new File(LOG_BASE_DIR);
+        stops = new File(log_dir, "stop");
+        starts = new File(log_dir, "start");
         WorkloadList workloads = new SimpleWorkloadList(getMaxCapacity());
         this.workloads = workloads;
     }

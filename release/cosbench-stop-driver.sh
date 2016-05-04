@@ -16,14 +16,16 @@
 #
 
 #-------------------------------
-# COSBENCH CONTROLLER STARTER
+# COSBENCH DRIVER STOPPER
 #-------------------------------
 
-SERVICE_NAME=controller
-VERSION=`cat VERSION`
+SERVICE_NAME=driver
 
-OSGI_BUNDLES="cosbench-log_${VERSION} cosbench-tomcat_${VERSION} cosbench-config_${VERSION} cosbench-core_${VERSION} cosbench-core-web_${VERSION} cosbench-controller_${VERSION} cosbench-controller-web_${VERSION}"
+OSGI_CONSOLE_PORT=18089
 
-OSGI_CONSOLE_PORT=19089
+BIN_DIR=
+if [ -f ./cosbench-stop.sh ]; then
+  BIN_DIR=./
+fi
 
-sh cosbench-start.sh $SERVICE_NAME "$OSGI_BUNDLES" $OSGI_CONSOLE_PORT
+${BIN_DIR}cosbench-stop.sh $SERVICE_NAME $OSGI_CONSOLE_PORT
