@@ -20,7 +20,7 @@ Summary:      Cloud Object Storage Benchmark
 Version:      0.4.1
 Release:      1
 License:      Apache-2.0
-Group:        Productivity/Networking/Email/Clients
+Group:        Productivity/Networking/Diagnostic
 URL:          https://github.com/intel-cloud/cosbench
 Source:       cosbench-%{version}.tar.xz
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
