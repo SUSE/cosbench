@@ -43,20 +43,37 @@ COSBench now supports OpenStack* Swift, Amazon* S3, Amplidata v2.3, 2.5 and
 %setup -qn cosbench-%{version}
 
 %build
-%ant install -Dinst.bin.dir="%buildroot/%_bindir" \
-    -Dinst.lib.dir="%buildroot/%_libdir/%name" \
-    -Dinst.conf.dir="%buildroot/%_sysconfigdir/%name" \
-    -Dinst.run.dir="\$HOME/.%name"
+%ant compile-all
 
-#%install
-#install -dm 0755 "%buildroot/%_datadir/%name"
-#install -m 0644 package/start-all.sh "%buildroot/%_datadir/%name/start-all.sh"
+%install
+%ant install -Dinst.bin.dir="%buildroot/%_bindir" \
+    -Dinst.lib.dir="%buildroot/%_datadir/%name" \
+    -Dinst.conf.dir="%buildroot/%_sysconfdir/%name" \
+    -Dinst.run.dir="\\\$HOME/.%name"
 
 %files
 %defattr(-,root,root)
 %doc AUTHORS CHANGELOG LICENSE NOTICE README.md
-#%_datadir/%name
-#%_datadir/%name/start-all.sh
+%_bindir/%name-cli.sh
+%_bindir/%name-stop-controller.sh
+%_bindir/%name-stop-driver.sh
+%_bindir/%name-stop-all.sh
+%_bindir/%name-start-all.sh
+%_bindir/%name-start-driver.sh
+%_bindir/%name-stop.sh
+%_bindir/%name-start.sh
+%_bindir/%name-start-controller.sh
+%_datadir/cosbench
+%config %dir %_sysconfdir/%name
+%config(noreplace) %_sysconfdir/%name/controller.conf
+%config(noreplace) %_sysconfdir/%name/driver.conf
+%config %dir %_sysconfdir/%name/.controller
+%config %_sysconfdir/%name/.controller/config.ini
+%config %_sysconfdir/%name/controller-tomcat-server.xml
+%config %_sysconfdir/%name/cosbench-users.xml
+%config %_sysconfdir/%name/driver-tomcat-server.xml
+%config %dir %_sysconfdir/%name/.driver
+%config %_sysconfdir/%name/.driver/config.ini
 
 %changelog
 

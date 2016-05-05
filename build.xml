@@ -63,7 +63,7 @@ cosbench-s3
     <delete dir="${dev.dir}/${proj.name}/${build.dir}" excludes="**/*.xml"/>
   </target>
 
-  <target name="init" depends="clean">
+  <target name="init">
     <tstamp />
     <mkdir dir="${dev.dir}/${proj.name}/${build.dir}" />
   </target>
