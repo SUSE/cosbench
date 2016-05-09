@@ -48,22 +48,21 @@ COSBench now supports OpenStack* Swift, Amazon* S3, Amplidata v2.3, 2.5 and
 %install
 %ant install -Dinst.bin.dir="%buildroot/%_bindir" \
     -Dinst.lib.dir="%buildroot/%_datadir/%name" \
+    -Dinst.scripts.dir="%buildroot/%_datadir/%name" \
     -Dinst.conf.dir="%buildroot/%_sysconfdir/%name" \
     -Dinst.run.dir="\\\$HOME/.%name"
+
+sed -i -e 's!CONF_DIR=.*$!CONF_DIR=%_sysconfdir/%name!g' \
+       -e 's!LIB_DIR=.*$!LIB_DIR=%_datadir/%name!g' \
+       %buildroot/%_datadir/%name/%name-start.sh
+sed -i -e 's!SCRIPTS_DIR=.*$!SCRIPTS_DIR=%_datadir/%name!g' \
+       %buildroot/%_bindir/%name
 
 %files
 %defattr(-,root,root)
 %doc AUTHORS CHANGELOG LICENSE NOTICE README.md
-%_bindir/%name-cli.sh
-%_bindir/%name-stop-controller.sh
-%_bindir/%name-stop-driver.sh
-%_bindir/%name-stop-all.sh
-%_bindir/%name-start-all.sh
-%_bindir/%name-start-driver.sh
-%_bindir/%name-stop.sh
-%_bindir/%name-start.sh
-%_bindir/%name-start-controller.sh
-%_datadir/cosbench
+%_datadir/%name
+%_bindir/%name
 %config %dir %_sysconfdir/%name
 %config(noreplace) %_sysconfdir/%name/controller.conf
 %config(noreplace) %_sysconfdir/%name/driver.conf

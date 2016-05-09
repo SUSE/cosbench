@@ -26,9 +26,4 @@ OSGI_BUNDLES="cosbench-log_${VERSION} cosbench-tomcat_${VERSION} cosbench-config
 
 OSGI_CONSOLE_PORT=18089
 
-BIN_DIR=
-if [ -f ./cosbench-start.sh ]; then
-  BIN_DIR=./
-fi
-
-${BIN_DIR}cosbench-start.sh $SERVICE_NAME "$OSGI_BUNDLES" $OSGI_CONSOLE_PORT
+sh cosbench-start.sh $SERVICE_NAME "$OSGI_BUNDLES" $OSGI_CONSOLE_PORT

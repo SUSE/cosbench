@@ -6,10 +6,11 @@
   <property name="build.dir" value="bin" />
   <property name="deploy.dir" location="dist/osgi/plugins" />
   <property name="package.dir" location="package" />
-  <property name="inst.bin.dir" location="/tmp/usr/bin" />
-  <property name="inst.lib.dir" location="/tmp/usr/lib/cosbench" />
-  <property name="inst.conf.dir" location="/tmp/etc/cosbench" />
-  <property name="inst.run.dir" location="/tmp/.cosbench" />
+  <property name="inst.bin.dir" location="${package.dir}" />
+  <property name="inst.scripts.dir" location="${package.dir}" />
+  <property name="inst.lib.dir" location="${package.dir}" />
+  <property name="inst.conf.dir" location="${package.dir}/conf" />
+  <property name="inst.run.dir" location="${package.dir}/run" />
 
   <loadfile property="version" srcfile="VERSION"/>
 
@@ -141,7 +142,7 @@ cosbench-s3
         <exclude name="scripts/**" />
       </fileset>
     </copy>
-    <chmod dir="${package.dir}" perm="0755" includes="cosbench-*.sh" />
+    <chmod dir="${package.dir}" perm="0755" includes="cosbench" />
     <copy todir="${package.dir}">
       <fileset dir="dist" />
     </copy>
@@ -157,30 +158,37 @@ cosbench-s3
   </target>
 
   <target name="install" depends="compile-all">
-    <copy todir="${inst.bin.dir}">
+    <copy todir="${inst.scripts.dir}">
       <fileset dir="release">
         <include name="cosbench-start.sh" />
         <include name="cosbench-stop.sh" />
-        <include name="cosbench-start-driver.sh" />
-        <include name="cosbench-stop-driver.sh" />
-        <include name="cosbench-start-controller.sh" />
-        <include name="cosbench-stop-controller.sh" />
-        <include name="cosbench-start-all.sh" />
-        <include name="cosbench-stop-all.sh" />
-        <include name="cosbench-cli.sh" />
+        <include name="start-driver.sh" />
+        <include name="stop-driver.sh" />
+        <include name="start-controller.sh" />
+        <include name="stop-controller.sh" />
+        <include name="start-all.sh" />
+        <include name="stop-all.sh" />
+        <include name="cli.sh" />
       </fileset>
     </copy>
-    <replace file="${inst.bin.dir}/cosbench-start.sh"
+    <copy todir="${inst.bin.dir}">
+      <fileset dir="release">
+        <include name="cosbench" />
+     </fileset>
+    </copy>
+    <replace file="${inst.scripts.dir}/cosbench-start.sh"
              token="CONF_DIR=./conf" value="CONF_DIR=${inst.conf.dir}" />
-    <replace file="${inst.bin.dir}/cosbench-start.sh"
+    <replace file="${inst.scripts.dir}/cosbench-start.sh"
              token="RUN_DIR=./run" value="RUN_DIR=${inst.run.dir}" />
-    <replace file="${inst.bin.dir}/cosbench-start.sh"
+    <replace file="${inst.scripts.dir}/cosbench-start.sh"
              token="LIB_DIR=." value="LIB_DIR=${inst.lib.dir}" />
-    <replace file="${inst.bin.dir}/cosbench-start-driver.sh"
+    <replace file="${inst.scripts.dir}/start-driver.sh"
              token="VERSION=`cat VERSION`" value="VERSION=${version}" />
-    <replace file="${inst.bin.dir}/cosbench-start-controller.sh"
+    <replace file="${inst.scripts.dir}/start-controller.sh"
              token="VERSION=`cat VERSION`" value="VERSION=${version}" />
-    <chmod dir="${inst.bin.dir}" perm="0755" includes="cosbench-*.sh" />
+    <replace file="${inst.bin.dir}/cosbench"
+             token="SCRIPTS_DIR=." value="SCRIPTS_DIR=${inst.scripts.dir}" />
+    <chmod dir="${inst.bin.dir}" perm="0755" includes="cosbench" />
     <copy todir="${inst.lib.dir}">
       <fileset dir="dist">
         <include name="**/*" />

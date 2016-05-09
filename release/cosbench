@@ -1,0 +1,102 @@
+#!/bin/bash
+
+SCRIPTS_DIR=.
+
+usage()
+{
+  echo
+  echo "Usage: $0 <start|stop> <module>"
+  echo "       (starts or stops the module)"
+  echo "       $0 <submit|cancel|info> <parameter> [username:password@ip:port]"
+  echo "       (executes action in cosbench server)"
+  echo "       $0 <help>"
+  echo "       (shows usage info)"
+  echo
+  echo "<username:password@ip:port> anonymous:cosbench@127.0.0.1:19088 by default"
+  echo
+  echo "List of modules:"
+  echo "    - <all>:          Driver and Controller modules"
+  echo "    - <driver>:       Driver module"
+  echo "    - <controller>:   Controller module"
+  echo
+  echo "List of actions:"
+  echo "    - <submit> <configuration file>: submit configuration and start workload"
+  echo "    - <cancel> <workload id>:        cancel workload"
+  echo "    - <info>:                        check status"
+  echo
+  exit $1
+}
+
+check_module()
+{
+  case "$1" in
+    all|driver|controller)
+      ;;
+    *)
+      echo "ERROR: $1 is not a valid module"
+      usage 1
+      ;;
+  esac
+
+}
+
+check_action()
+{
+  info=$1
+  if [[ "${info}" == ?*:?*@?*.?*.?*.?*:?* ]]; then
+    address=${info#*@}
+    userinfo=${info%@*}
+    username=${userinfo%:*}
+    password=${userinfo#*:}
+  elif [[ "${info}" != *@?*:?* ]] && [[ "${info}" == ?*.?*.?*.?*:?* ]]; then
+    address=${info}
+  elif [[ "${info}" != *@?*:?* ]] && [[ "${info}" != ?*:*@* ]] && \
+       [[ "${info}" == ?*:?* ]]; then
+    userinfo=${info}
+    username=${userinfo%:*}
+    password=${userinfo#*:}
+  else
+    echo "ERROR: web credentials or address invalid"
+    usage 1
+  fi
+}
+
+
+if [ $# -lt 1 ]; then
+  usage 1
+fi
+
+case "$1" in
+  help)
+    usage 0
+    ;;
+  start|stop)
+    if [ $# -lt 2 ]; then
+      echo "ERROR: no module specified"
+      usage 1
+    fi
+    check_module $2
+    cd $SCRIPTS_DIR; sh ${1}-${2}.sh
+    ;;
+  submit|cancel)
+    if [ $# -lt 2 ]; then
+      if [ "$1" == "submit" ]; then
+        echo "ERROR: no config file specified"
+      else
+        echo "ERROR: no workload id specified"
+      fi
+      usage 1
+    fi
+    if [ $# -gt 2 ]; then
+      check_action $3
+    fi
+    cd $SCRIPTS_DIR; bash cli.sh $*
+    ;;
+  info)
+    if [ $# -gt 1 ]; then
+      check_action $2
+    fi
+    cd $SCRIPTS_DIR; bash cli.sh $*
+    ;;
+esac
+
