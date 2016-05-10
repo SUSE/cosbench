@@ -11,6 +11,7 @@
   <property name="inst.lib.dir" location="${package.dir}" />
   <property name="inst.conf.dir" location="${package.dir}/conf" />
   <property name="inst.run.dir" location="${package.dir}/run" />
+  <property name="inst.samples.dir" location="${package.dir}/conf/samples" />
 
   <loadfile property="version" srcfile="VERSION"/>
 
@@ -205,24 +206,29 @@ cosbench-s3
         <include name="cosbench-users.xml" />
       </fileset>
     </copy>
+    <copy todir="${inst.samples.dir}">
+      <fileset dir="release/conf">
+        <exclude name=".driver/**" />
+        <exclude name=".controller/**" />
+        <exclude name="driver.conf" />
+        <exclude name="controller.conf" />
+        <exclude name="driver-tomcat-server.xml" />
+        <exclude name="controller-tomcat-server.xml" />
+        <exclude name="cosbench-users.xml" />
+      </fileset>
+    </copy>
   </target>
 
   <target name="uninstall">
     <delete>
       <fileset dir="${inst.bin.dir}">
-        <include name="cosbench-start.sh" />
-        <include name="cosbench-stop.sh" />
-        <include name="cosbench-start-driver.sh" />
-        <include name="cosbench-stop-driver.sh" />
-        <include name="cosbench-start-controller.sh" />
-        <include name="cosbench-stop-controller.sh" />
-        <include name="cosbench-start-all.sh" />
-        <include name="cosbench-stop-all.sh" />
-        <include name="cosbench-cli.sh" />
+        <include name="cosbench" />
       </fileset>
     </delete>
-    <delete dir="${inst.lib.dir}" />
+    <delete dir="${inst.samples.dir}" />
     <delete dir="${inst.conf.dir}" />
+    <delete dir="${inst.scripts.dir}" />
+    <delete dir="${inst.lib.dir}" />
   </target>
 
 </project>
