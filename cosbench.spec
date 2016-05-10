@@ -52,10 +52,10 @@ COSBench now supports OpenStack* Swift, Amazon* S3, Amplidata v2.3, 2.5 and
     -Dinst.conf.dir="%buildroot/%_sysconfdir/%name" \
     -Dinst.run.dir="\\\$HOME/.%name"
 
-sed -i -e 's!CONF_DIR=.*$!CONF_DIR=%_sysconfdir/%name!g' \
-       -e 's!LIB_DIR=.*$!LIB_DIR=%_datadir/%name!g' \
+sed -i -e 's!^CONF_DIR=.*$!CONF_DIR=%_sysconfdir/%name!g' \
+       -e 's!^LIB_DIR=.*$!LIB_DIR=%_datadir/%name!g' \
        %buildroot/%_datadir/%name/%name-start.sh
-sed -i -e 's!SCRIPTS_DIR=.*$!SCRIPTS_DIR=%_datadir/%name!g' \
+sed -i -e 's!^SCRIPTS_DIR=.*$!SCRIPTS_DIR=%_datadir/%name!g' \
        %buildroot/%_bindir/%name
 
 %files
