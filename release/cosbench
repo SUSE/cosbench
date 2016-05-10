@@ -78,13 +78,25 @@ case "$1" in
     check_module $2
     cd $SCRIPTS_DIR; sh ${1}-${2}.sh
     ;;
-  submit|cancel)
+  submit)
     if [ $# -lt 2 ]; then
-      if [ "$1" == "submit" ]; then
-        echo "ERROR: no config file specified"
-      else
-        echo "ERROR: no workload id specified"
-      fi
+      echo "ERROR: no config file specified"
+      usage 1
+    fi
+    if [ $# -gt 2 ]; then
+      check_action $3
+    fi
+    file=`realpath $2`
+    cd $SCRIPTS_DIR
+    if [ $# -gt 2 ]; then
+      bash cli.sh "$1" "$file" "$3"
+    else
+      bash cli.sh "$1" "$file"
+    fi
+    ;;
+  cancel)
+    if [ $# -lt 2 ]; then
+      echo "ERROR: no workload id specified"
       usage 1
     fi
     if [ $# -gt 2 ]; then
@@ -92,6 +104,7 @@ case "$1" in
     fi
     cd $SCRIPTS_DIR; bash cli.sh $*
     ;;
+
   info)
     if [ $# -gt 1 ]; then
       check_action $2
